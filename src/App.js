@@ -29,6 +29,10 @@ function App() {
 
     const response = await axios.post("https://e98214fc4i.execute-api.us-east-1.amazonaws.com/default/geraFolhaPontoABSGP", {
       name, email, password, dateReference
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
     });
 
     setMessage({ show: true, type: response.data.success ? 'success' : 'danger', text: response.data.message });
