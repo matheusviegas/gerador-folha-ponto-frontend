@@ -72,7 +72,7 @@ function App() {
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Senha</Form.Label>
           <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Senha do ABSGP" required />
         </Form.Group>
 
