@@ -14,28 +14,38 @@ function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mes, setMes] = useState(1);
-  const [ano, setAno] = useState(2020);
-  const [message, setMessage] = useState({ show: false, type: 'success', text: '' })
+  const [month, setMonth] = useState(1);
+  const [year, setYear] = useState(2020);
+  const [message, setMessage] = useState({ show: false, type: 'success', text: '' });
+  const [isLoading, setLoading] = useState(false);
   const currentYear = new Date().getFullYear();
   const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
   const generateReport = async e => {
     e.preventDefault();
 
+    setLoading(true);
+
     setMessage({ ...message, show: false });
 
-    const dateReference = `${(mes < 10 ? "0" + mes : mes)}/${ano}`;
+    const dateReference = `${(month < 10 ? "0" + month : month)}/${year}`;
 
-    const response = await axios.post("https://e98214fc4i.execute-api.us-east-1.amazonaws.com/default/geraFolhaPontoABSGP", {
+    const response = await axios.post("https://bb8.mvsouza.com.br/folha-ponto", {
       name, email, password, dateReference
-    }, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      }
     });
 
+    setLoading(false);
+    setName("");
+    setEmail("");
+    setPassword("");
+    setMonth(1);
+    setYear(2020);
+
     setMessage({ show: true, type: response.data.success ? 'success' : 'danger', text: response.data.message });
+
+    setTimeout(() => {
+      setMessage({ ...message, show: false });
+    }, 5000);
   }
 
   const buildMonthsOptions = () => {
@@ -78,25 +88,25 @@ function App() {
 
         <Row>
           <Col>
-            <Form.Group controlId="cmbMes">
+            <Form.Group controlId="cmbMonth">
               <Form.Label>Mês</Form.Label>
-              <Form.Control value={mes} onChange={e => setMes(e.target.value)} as="select">
+              <Form.Control value={month} onChange={e => setMonth(e.target.value)} as="select">
                 {buildMonthsOptions()}
               </Form.Control>
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="cmbAno">
+            <Form.Group controlId="cmbYear">
               <Form.Label>Ano</Form.Label>
-              <Form.Control value={ano} onChange={e => setAno(e.target.value)} as="select">
+              <Form.Control value={year} onChange={e => setYear(e.target.value)} as="select">
                 {buildYearsOptions()}
               </Form.Control>
             </Form.Group>
           </Col>
         </Row>
 
-        <Button variant="primary" type="submit">
-          Gerar Planilha
+        <Button disabled={isLoading} variant="primary" type="submit">
+          {isLoading ? "Aguarde.." : "Gerar Planilha"}
         </Button>
 
         {message.show && (
