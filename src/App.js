@@ -30,7 +30,7 @@ function App() {
 
     const dateReference = `${(month < 10 ? "0" + month : month)}/${year}`;
 
-    const response = await axios.post("https://bb8.mvsouza.com.br/folha-ponto", {
+    const response = await axios.post("https://api.msouza.dev/api/v1/folhaponto", {
       name, email, password, dateReference
     });
 
